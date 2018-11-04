@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.test.EmployeeMapperPlus">
+
+	<resultMap type="com.atguigu.mybatis.bean.Employee" id="MyEmp">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastname"/>
+		<result column="gender" property="gender"/>
+		<!-- <result column="did" property="dep.id"/>
+		<result column="dept_name" property="dep.depatmentName"/> -->
+		<!-- association可以指定java的联合对象
+			prooerty制定那个属性是联合的对象
+			javaType:指定这个属性的类型 -->
+	
+		<association property="dep" javaType="com.atguigu.mybatis.bean.Department">
+			<id column="did" property="id"/>
+			<result column="dept_name" property="depatmentName"/>
+		</association>
+	</resultMap>
+	
+	<select id="getEmpById" resultType="Employee">
+		select * from tbl_employee where id=#{id}
+	</select>
+	<select id="getEmpAndDep" resultMap="MyEmp">
+		select e.id id,e.last_name last_name,e.gender gender,e.d_id d_id,d.dept_name dept_name,d.id did
+		from tbl_employee e,tbl_dept d
+		where e.d_id=d.id and e.id=#{id}
+	</select>
+	<!-- 使用assiciation进行分步查询 -->
+	<resultMap type="com.atguigu.mybatis.bean.Employee" id="MyEmpBystp">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastname"/>
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+		<!-- select表示级联到depatmpper里面的某个方法，并调用   column表示指定那一列的值传给对应的方法-->
+		<association property="dep" 
+			select="com.atguigu.mybatis.test.DepartmentMapper.getDeptById"
+			column="d_id">
+		</association>
+	</resultMap>
+	<select id="getEmpByIdStep" resultMap="MyEmpBystp">
+		select * from tbl_employee where id=#{id}
+	</select>
+	<!-- 使用延迟加载
+		我们每次查询emplyoee对象的时候，都将一起拆卸拿出来
+		部门信息在我们使用的时候再去查询
+		分段查询的基础上加上两个配置 
+		在主配置文件中配置-->
+	<!-- 查询部门的同时将部门的全部员工信息查询出来 -->
+		
+	
+	
+</mapper>

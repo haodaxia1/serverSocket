@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.test.MessageMapper">
+	<insert id="setMes">
+		insert into mesage(fromname,toname,time,message) values(#{fromname},#{toname},#{time},#{message})
+	</insert>
+	<select id="getMes" resultType="com.atguigu.mybatis.bean.message">
+		select * from mesage where (fromname = #{1} and toname=#{0}) or(fromname = #{0} and toname=#{1})order by mid 
+	</select>
+</mapper>

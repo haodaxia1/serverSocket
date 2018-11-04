@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.test.DepartmentMapper">
+	<select id="getDeptById" resultType="com.atguigu.mybatis.bean.Department">
+		select id,dept_name  depatmentName from tbl_dept where id=#{id}
+	</select>
+	<resultMap type="com.atguigu.mybatis.bean.Department" id="Mydept">
+		<id column="did" property="id"/>
+		<result column="dept_name" property="depatmentName"/>
+		<!-- collection定义关联集合类型的属性的封装规则
+		offType:集合中元素的类型
+			 -->
+		<collection property="emps" ofType="Employee">
+			<id column="eid" property="id"/>
+			<result column="last_name" property="lastname"/>
+			<result column="email" property="email"/>
+			<result column="gender" property="gender"/>	
+		</collection>
+	</resultMap>
+	<select id="getDeptBtIdPlus" resultMap="Mydept">
+		select d.id did,d.dept_name dept_name,e.id eid,e.last_name last_name,e.email email,e.gender gender
+		from tbl_dept d
+		left join tbl_employee e
+		on d.id=e.d_id
+		where d.id=#{id}
+	</select>
+</mapper>
